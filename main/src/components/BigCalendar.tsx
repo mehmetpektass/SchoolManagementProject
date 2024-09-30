@@ -14,6 +14,8 @@ const BigCalendar = () => {
       events={calendarEvents}
       startAccessor="start"
       endAccessor="end"
+      views={['work_week','day']}
+      view={'work_week'}
       style={{ height: 500 }}
     />
   </div>
