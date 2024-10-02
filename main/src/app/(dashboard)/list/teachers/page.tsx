@@ -44,12 +44,12 @@ const columns = [
     {
       header: "Phone",
       accessor: "phone",
-      className: "hidden lg:table-cell",
+      className: "hidden md:table-cell",
     },
     {
       header: "Address",
       accessor: "address",
-      className: "hidden lg:table-cell",
+      className: "hidden md:table-cell",
     },
     {
       header: "Actions",
