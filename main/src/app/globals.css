@@ -80,8 +80,6 @@
  
 }
 
-
-
 .rbc-current-time-indicator {
   display: none !important;
 }
@@ -113,7 +111,7 @@
 
 .rbc-event-label {
   color: gray !important;
-  margin-bottom: 5px;
+  margin-bottom: 5px !important;
 }
 .rbc-timeslot-group {
   margin-top: 70px !important;
