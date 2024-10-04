@@ -1,6 +1,7 @@
 "use client";
 import Image from "next/image";
 import React, { useState } from "react";
+import TeacherForm from "./forms/TeacherForm";
 
 const FormModal = ({
   table,
@@ -41,7 +42,7 @@ const FormModal = ({
             <span className="text-center font-medium"> All data will be lost. Are you sure you want to delete this {table}?</span>
             <button className="bg-red-600 w-max self-center mt-2 p-2 border-none rounded-md text-white">Delete</button>
         </form>
-    ) : ("create or update form")
+    ) : <TeacherForm type="create" />
   }
 
   return (
