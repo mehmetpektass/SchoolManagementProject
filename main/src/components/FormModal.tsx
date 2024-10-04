@@ -42,7 +42,7 @@ const FormModal = ({
             <span className="text-center font-medium"> All data will be lost. Are you sure you want to delete this {table}?</span>
             <button className="bg-red-600 w-max self-center mt-2 p-2 border-none rounded-md text-white">Delete</button>
         </form>
-    ) : <TeacherForm type="create" />
+    ) : <TeacherForm type="update" />
   }
 
   return (
@@ -55,7 +55,7 @@ const FormModal = ({
       </button>
       
       {showModal && (
-        <div className="w-screen h-screen absolute left-0 top-0 bg-black bg-opacity-60 flex items-center justify-center">
+        <div className="w-screen h-screen absolute left-0 top-0 bg-black bg-opacity-60 z-10 flex items-center justify-center">
           <div className="bg-white rounded-md p-4 relative w-[80%] md:w-[70%] lg:w-[60%] xl:w-[50%] 2xl:w-[40%]">
           <Form/>
            
