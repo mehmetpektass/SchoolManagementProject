@@ -4,11 +4,11 @@ import Table from "@/components/Table";
 import TableSearch from "@/components/TableSearch";
 import { role, teachersData } from "@/lib/data";
 import prisma from "@/lib/prisma";
+import { ITEM_PER_PAGE } from "@/lib/settings";
 import { Class, Subject, Teacher } from "@prisma/client";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
-
 
 type TeacherList = Teacher & { subjects: Subject[] } & { classes: Class[] };
 
@@ -48,8 +48,6 @@ const columns = [
   },
 ];
 
-
-
 const renderRow = (item: TeacherList) => (
   <tr
     key={item.id}
@@ -57,7 +55,7 @@ const renderRow = (item: TeacherList) => (
   >
     <td className="flex items-center gap-4 p-4">
       <Image
-        src={item.img || '/noAvatar.png'}
+        src={item.img || "/noAvatar.png"}
         alt=""
         width={40}
         height={40}
@@ -69,8 +67,12 @@ const renderRow = (item: TeacherList) => (
       </div>
     </td>
     <td className="hidden md:table-cell">{item.id}</td>
-    <td className="hidden md:table-cell">{item.subjects.map((subject) =>subject.name).join(", ")}</td>
-    <td className="hidden md:table-cell">{item.classes.map((classItem) => classItem.name).join(", ")}</td>
+    <td className="hidden md:table-cell">
+      {item.subjects.map((subject) => subject.name).join(", ")}
+    </td>
+    <td className="hidden md:table-cell">
+      {item.classes.map((classItem) => classItem.name).join(", ")}
+    </td>
     <td className="hidden md:table-cell">{item.phone}</td>
     <td className="hidden md:table-cell">{item.address}</td>
     <td>
@@ -80,23 +82,34 @@ const renderRow = (item: TeacherList) => (
             <Image src="/view.png" alt="" width={16} height={16} />
           </button>
         </Link>
-        {role === "admin" && <FormModal table="teacher" type="delete" id={item.id} />}
+        {role === "admin" && (
+          <FormModal table="teacher" type="delete" id={item.id} />
+        )}
       </div>
     </td>
   </tr>
 );
 
+const TeacherListPage = async ({
+  searchParams,
+}: {
+  searchParams: { [key: string]: string | undefined };
+}) => {
+  const { page, ...queryParams } = searchParams;
 
-const TeacherListPage = async () => {
+  const p = page ? parseInt(page) : 1;
 
-
-  const data = await prisma.teacher.findMany({
-    include:{
-      subjects:true,
-      classes:true,
-    }
-  });
- 
+  const [data, count] = await prisma.$transaction([
+    prisma.teacher.findMany({
+      include: {
+        subjects: true,
+        classes: true,
+      },
+      take: ITEM_PER_PAGE,
+      skip: ITEM_PER_PAGE * (p - 1),
+    }),
+    prisma.teacher.count(),
+  ]);
 
   return (
     <div className="bg-white p-4 rounded-md flex-1 m-4 mt-0">
@@ -116,7 +129,7 @@ const TeacherListPage = async () => {
         </div>
       </div>
       <Table columns={columns} renderRow={renderRow} data={data} />
-      <Pagination />
+      <Pagination count={count} page={p} />
     </div>
   );
 };

@@ -1,6 +1,6 @@
 import React from 'react'
 
-const Pagination = () => {
+const Pagination = ({count, page} : {count:number, page:number}) => {
   return (
     <div className='flex justify-between'>
         <button className='py-2 px-4 mt-4 rounded-md bg-slate-200 text-xs font-semibold disabled:cursor-not-allowed disabled:opacity-50'>Prev</button>
