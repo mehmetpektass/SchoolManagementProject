@@ -85,7 +85,7 @@ const StudentListPage = () => {
               <Image src="/view.png" alt="" width={16} height={16} />
             </button>
           </Link>
-          {role === "admin" && <FormModal table="student" type="delete" id={item.id} />}
+          {role === "admin" && <FormModal table="student" type="delete" />}
         </div>
       </td>
     </tr>
@@ -109,7 +109,7 @@ const StudentListPage = () => {
             </div>
         </div>
         <Table columns={columns} renderRow={renderRow} data={studentsData}/>
-        <Pagination/>
+        {/* <Pagination/> */}
     </div>
   )
 }
