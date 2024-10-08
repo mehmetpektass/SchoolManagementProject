@@ -116,6 +116,9 @@ const TeacherListPage = async ({
               query.name = {
                 contains:value, mode:"insensitive"
               }
+              break;
+              default:
+              break;
         }
       }
     }
