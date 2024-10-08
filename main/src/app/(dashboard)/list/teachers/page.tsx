@@ -118,11 +118,7 @@ const TeacherListPage = async ({
 
   const [data, count] = await prisma.$transaction([
     prisma.teacher.findMany({
-      where:{
-        lessons:{
-          some:{classId:parseInt(queryParams.classId!)}
-        }
-      },
+      where:query,
       include: {
         subjects: true,
         classes: true,
@@ -131,12 +127,8 @@ const TeacherListPage = async ({
       skip: ITEM_PER_PAGE * (p - 1),
     }),
     prisma.teacher.count({
-      where:{
-        lessons:{
-          some:{classId:parseInt(queryParams.classId!)}
-        }
-      }
-    }),
+      where:query
+    })
   ]);
 
   return (
