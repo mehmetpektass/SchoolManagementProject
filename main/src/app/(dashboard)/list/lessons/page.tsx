@@ -9,7 +9,9 @@ import { Class, Lesson, Prisma, Subject, Teacher } from "@prisma/client";
 import Image from "next/image";
 import Link from "next/link";
 
-type LessonList = Lesson & {teacher:Teacher} & {class:Class} & {subject:Subject}
+type LessonList = Lesson & { teacher: Teacher } & { class: Class } & {
+  subject: Subject;
+};
 
 const columns = [
   {
@@ -31,7 +33,6 @@ const columns = [
   },
 ];
 
-
 const renderRow = (item: LessonList) => (
   <tr
     key={item.id}
@@ -39,10 +40,12 @@ const renderRow = (item: LessonList) => (
   >
     <td className="flex items-center gap-4 p-4">{item.subject.name}</td>
     <td>{item.class.name}</td>
-    <td className="hidden md:table-cell">{item.teacher.name + " " + item.teacher.surname}</td>
+    <td className="hidden md:table-cell">
+      {item.teacher.name + " " + item.teacher.surname}
+    </td>
     <td>
       <div className="flex items-center gap-2">
-      {role === "admin" && (
+        {role === "admin" && (
           <>
             <FormModal table="lesson" type="update" data={item} />
             <FormModal table="lesson" type="delete" id={item.id} />
@@ -53,13 +56,9 @@ const renderRow = (item: LessonList) => (
   </tr>
 );
 
-
-
-
-
-const LessonListPage= async ({
+const LessonListPage = async ({
   searchParams,
-} : {
+}: {
   searchParams: { [key: string]: string | undefined };
 }) => {
   const { page, ...queryParams } = searchParams;
@@ -75,13 +74,13 @@ const LessonListPage= async ({
           case "teacherId":
             query.teacherId = value;
             break;
-            case "classId":
+          case "classId":
             query.classId = parseInt(value);
             break;
           case "search":
             query.OR = [
-              {subject: {name: {contains:value, mode:"insensitive"}}},
-              {teacher: {name: {contains:value, mode:"insensitive"}}}
+              { subject: { name: { contains: value, mode: "insensitive" } } },
+              { teacher: { name: { contains: value, mode: "insensitive" } } },
             ];
             break;
           default:
@@ -93,22 +92,19 @@ const LessonListPage= async ({
 
   const [data, count] = await prisma.$transaction([
     prisma.lesson.findMany({
-      where:query,
+      where: query,
       include: {
-        
-        subject: { select: {name:true}},
-        class: { select: {name:true}},
-        teacher: { select: {name:true , surname:true}},
+        subject: { select: { name: true } },
+        class: { select: { name: true } },
+        teacher: { select: { name: true, surname: true } },
       },
       take: ITEM_PER_PAGE,
       skip: ITEM_PER_PAGE * (p - 1),
     }),
     prisma.lesson.count({
-      where:query
-    })
+      where: query,
+    }),
   ]);
-  
-  
 
   return (
     <div className="bg-white p-4 rounded-md flex-1 m-4 mt-0">
@@ -131,7 +127,7 @@ const LessonListPage= async ({
       {/* LIST */}
       <Table columns={columns} renderRow={renderRow} data={data} />
       {/* PAGINATION */}
-      <Pagination page={p} count={count}/>
+      <Pagination page={p} count={count} />
     </div>
   );
 };
