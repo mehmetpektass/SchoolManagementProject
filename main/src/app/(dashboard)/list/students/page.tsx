@@ -10,7 +10,7 @@ import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 
-type StudentList = Student & {class:Class}
+type StudentList = Student & { class: Class };
 
 const columns = [
   {
@@ -80,7 +80,7 @@ const renderRow = (item: StudentList) => (
 
 const StudentListPage = async ({
   searchParams,
-} : {
+}: {
   searchParams: { [key: string]: string | undefined };
 }) => {
   const { page, ...queryParams } = searchParams;
@@ -90,26 +90,26 @@ const StudentListPage = async ({
   const query: Prisma.StudentWhereInput = {};
 
   if (queryParams) {
-    for(const [key,value] of Object.entries(queryParams)){
+    for (const [key, value] of Object.entries(queryParams)) {
       if (value !== undefined) {
-        switch(key){
+        switch (key) {
           case "teacherId":
             query.class = {
-              lessons:{
-                some:{
-                  teacherId: value
-                }
-              }
-             
-            }
+              lessons: {
+                some: {
+                  teacherId: value,
+                },
+              },
+            };
             break;
-            case "search":
-              query.name = {
-                contains:value, mode:"insensitive"
-              }
-              break;
-              default:
-              break;
+          case "search":
+            query.name = {
+              contains: value,
+              mode: "insensitive",
+            };
+            break;
+          default:
+            break;
         }
       }
     }
@@ -117,19 +117,17 @@ const StudentListPage = async ({
 
   const [data, count] = await prisma.$transaction([
     prisma.student.findMany({
-      where:query,
+      where: query,
       include: {
-        
         class: true,
       },
       take: ITEM_PER_PAGE,
       skip: ITEM_PER_PAGE * (p - 1),
     }),
     prisma.student.count({
-      where:query
-    })
+      where: query,
+    }),
   ]);
-
 
   return (
     <div className="bg-white p-4 rounded-md flex-1 m-4 mt-0">
